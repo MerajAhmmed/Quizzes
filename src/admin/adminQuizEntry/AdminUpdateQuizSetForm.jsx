@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAxios } from "../../hooks/useAxios";
 import { useQuiz } from "../../hooks/useQuiz";
 
@@ -9,11 +10,10 @@ export default function AdminUpdateQuizSetForm() {
   const navigate = useNavigate();
   const { api } = useAxios();
   const { quizSetId } = useParams();
-  const { quizData, isLoading, fetchError, setQuizData } = useQuiz(quizSetId);
+  const { quizData } = useQuiz(quizSetId);
   const [loading, setLoading] = useState(false);
   const {
     register,
-    handleSubmit,
     setError,
     formState: { errors },
     reset,
@@ -21,7 +21,6 @@ export default function AdminUpdateQuizSetForm() {
 
   useEffect(() => {
     if (quizData) {
-      console.log(quizData);
       reset({
         title: quizData?.title,
         description: quizData?.description,
@@ -36,11 +35,11 @@ export default function AdminUpdateQuizSetForm() {
         `${import.meta.env.VITE_SERVER_BASE_URL}/api/admin/quizzes/${quizSetId}`
       );
       if (response.status === 200) {
-        alert("Quiz Set Deleted Sucessfully");
+        toast.success("Quiz Set Deleted Sucessfully");
         navigate("/admin/dashboard");
       }
     } catch (error) {
-      console.log(error);
+      setError("submit", { message: "Failed to delete quiz." });
     }
   };
 
@@ -53,16 +52,15 @@ export default function AdminUpdateQuizSetForm() {
         }/api/admin/quizzes/${quizSetId}`,
         { status: "published" }
       );
+      toast.success("quiz Publish successfully");
     } catch (error) {
-      console.log(error);
+      setError("submit", { message: "Failed to publish quiz." });
     }
     setLoading(false);
   };
-  function submitForm(formData) {
-    console.log(formData);
-  }
+
   return (
-    <form onSubmit={handleSubmit(submitForm)}>
+    <form>
       <div className="mb-4">
         <label
           htmlFor="quiz-title"

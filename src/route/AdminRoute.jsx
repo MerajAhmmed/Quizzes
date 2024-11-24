@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import AdminSideBar from "../admin/adminDashboard/AdminSideBar";
 import useAuth from "../hooks/useAuth";
 
-export default function AdminRoute({ children }) {
+export default function AdminRoute() {
   const { auth } = useAuth();
   return (
     <>

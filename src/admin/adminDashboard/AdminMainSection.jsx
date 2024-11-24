@@ -26,7 +26,6 @@ export default function AdminMainSection() {
         setLoading(false);
       }
     };
-
     fetchQuizzes();
   }, [api]);
   return (

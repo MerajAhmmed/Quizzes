@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAxios } from "../../hooks/useAxios";
 
 export default function CreateQuizForm() {
@@ -23,7 +24,7 @@ export default function CreateQuizForm() {
         `${import.meta.env.VITE_SERVER_BASE_URL}/api/admin/quizzes/`,
         quizData
       );
-
+      toast.success("Quiz Created Sucessfully");
       navigate("/admin/dashboard");
     } catch (err) {
       setError("submit", { message: "Failed to submit quiz." });
@@ -39,7 +40,11 @@ export default function CreateQuizForm() {
           Quiz title
         </label>
         <input
-          {...register("quiz-title")}
+          {...register("quiz-title", {
+            required: "quiz title is required",
+            validate: (value) =>
+              value.trim() !== "" || "quiz title cannot be whitespace",
+          })}
           type="text"
           id="quiz-title"
           name="quiz-title"
@@ -56,7 +61,11 @@ export default function CreateQuizForm() {
           Description (Optional)
         </label>
         <textarea
-          {...register("quiz-description")}
+          {...register("quiz-description", {
+            required: "quiz description is required",
+            validate: (value) =>
+              value.trim() !== "" || "quiz description cannot be whitespace",
+          })}
           id="quiz-description"
           name="quiz-description"
           rows="4"
@@ -64,9 +73,7 @@ export default function CreateQuizForm() {
           placeholder="Description"
         ></textarea>
       </div>
-      {errors["quiz-title"] && (
-        <p className="text-red-500 text-sm">{errors["quiz-title"].message}</p>
-      )}
+
       <button
         type="submit"
         className="w-full block text-center bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"

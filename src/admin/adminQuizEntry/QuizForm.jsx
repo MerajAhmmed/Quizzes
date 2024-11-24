@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import Field from "../../component/common/Field";
 import { useAxios } from "../../hooks/useAxios";
 
@@ -12,10 +11,15 @@ export default function QuizForm({
 }) {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState();
 
-  const { register, handleSubmit, reset, setError } = useForm();
-  const { api } = useAxios();
-  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm();
 
+  const { api } = useAxios();
   const submitForm = async (formData) => {
     const newQuiz = {
       question: formData?.quizTitle,
@@ -91,12 +95,21 @@ export default function QuizForm({
               Question Title
             </label>
             <input
-              {...register("quizTitle")}
+              {...register("quizTitle", {
+                required: "Question title is required",
+                validate: (value) =>
+                  value.trim() !== "" || "Question cannot be whitespace",
+              })}
               type="text"
               id="quizTitle"
               className="w-full mt-2 p-2 border border-input rounded-md bg-background text-foreground"
               placeholder="Enter quiz title"
             />
+            {errors.quizTitle && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.quizTitle.message}
+              </p>
+            )}
           </div>
         </Field>
 
@@ -119,7 +132,9 @@ export default function QuizForm({
                     Option {index + 1}
                   </label>
                   <input
-                    {...register(`options[${index}].text`)}
+                    {...register(`options[${index}].text`, {
+                      required: "option is required",
+                    })}
                     type="text"
                     id={`optionText${index}`}
                     className="w-full p-2 bg-transparent rounded-md text-foreground outline-none focus:ring-0"

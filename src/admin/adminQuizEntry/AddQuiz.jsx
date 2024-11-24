@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAxios } from "../../hooks/useAxios";
 import { useQuiz } from "../../hooks/useQuiz";
 import NavigateQuize from "./NavigateQuize";
@@ -27,6 +28,7 @@ export default function AddQuiz() {
 
   const addQuiz = (quizData) => {
     setQuestions((prevQuizzes) => [...prevQuizzes, quizData]);
+    toast.success("quiz add sucessfully");
   };
 
   const updateQuiz = (quizData) => {
@@ -41,6 +43,7 @@ export default function AddQuiz() {
       question: null,
       correctAnswer: null,
     });
+    toast.success("quiz edit sucessfully");
   };
 
   const handleDelete = async (id) => {
@@ -50,15 +53,14 @@ export default function AddQuiz() {
       );
 
       const deleteQuestion = questions.filter((question) => question.id !== id);
-
       setQuestions(deleteQuestion);
+      toast.success("delete successfully");
     } catch (error) {
       console.log(error);
     }
   };
 
   function handleEdit(question) {
-    console.log(question);
     const formData = {
       quizTitle: question?.question,
       options: [

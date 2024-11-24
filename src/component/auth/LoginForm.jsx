@@ -30,53 +30,53 @@ export default function LoginForm() {
       navigate(isAdmin ? "/admin/dashboard" : "/");
     } catch (error) {
       setError("root.random", {
-        type: "random", // Corrected typo
-        message: `Username and email ${formData.email} are not found`, // Grammar correction
+        type: "random",
+        message: `Username and email ${formData.email} are not found`,
       });
     }
   };
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>
-      <Field
-        label="Enter your username or email address"
-        error={errors.email}
-        className="mb-4"
-      >
-        {/* <label htmlFor="username" className="block mb-2"></label> */}
-        <input
-          {...register("email", {
-            required: "Enter your username or email address",
-          })}
-          type="text"
-          id="email"
-          className={`w-full px-4 py-3 rounded-lg border ${
-            errors.email ? "border-red-600" : "border-gray-300"
-          }`}
-          placeholder="Username or email address"
-        />
+      <Field>
+        <div className="mb-4">
+          <label htmlFor="username" className="block mb-2">
+            Enter your username or email address
+          </label>
+          <input
+            {...register("email", {
+              required: "Enter your username or email address",
+            })}
+            type="text"
+            id="email"
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.email ? "border-red-600" : "border-gray-300"
+            }`}
+            placeholder="Username or email address"
+          />
+        </div>
       </Field>
-      <Field
-        label="Enter your Password"
-        className="mb-6"
-        error={errors.password}
-      >
-        {/* <label htmlFor="password" className="block mb-2"></label> */}
-        <input
-          {...register("password", {
-            required: "Enter your password",
-            minLength: {
-              value: 8,
-              message: "Your password must be at least 8 charecter",
-            },
-          })}
-          type="password"
-          id="password"
-          className={`w-full px-4 py-3 rounded-lg border ${
-            errors.password ? "border-red-600" : "border-gray-300"
-          }`}
-          placeholder="Password"
-        />
+      <Field>
+        <div className="mb-6">
+          <label htmlFor="password" className="block mb-2">
+            Enter your Password
+          </label>
+          <input
+            {...register("password", {
+              required: "Enter your password",
+              minLength: {
+                value: 8,
+                message: "Your password must be at least 8 charecter",
+              },
+            })}
+            type="password"
+            id="password"
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.password ? "border-red-600" : "border-gray-300"
+            }`}
+            placeholder="Password"
+          />
+        </div>
       </Field>
       <div className="mb-6 flex gap-2 items-center">
         <input

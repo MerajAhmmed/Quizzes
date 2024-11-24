@@ -6,14 +6,16 @@ export default function ShowQuiz({ questions, handleDelete, handleEdit }) {
           <div className="bg-white p-6 !pb-2">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">
-                {index + 1}. {question.question}
+                {index + 1}. {question?.question}
               </h3>
             </div>
             <div className="space-y-2">
               {question?.options.map((option, optionIndex) => (
                 <label
                   key={optionIndex}
-                  className="flex items-center space-x-3"
+                  className={`flex items-center space-x-3 ${
+                    option.isCorrect ? "font-bold text-green-600" : ""
+                  }`}
                 >
                   <input
                     type="radio"
