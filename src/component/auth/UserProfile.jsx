@@ -1,5 +1,7 @@
 import avater from "../../assets/avater.webp";
+import useAuth from "../../hooks/useAuth";
 export default function UserProfile() {
+  const { auth } = useAuth();
   return (
     <div className="text-center mb-12">
       <img
@@ -12,7 +14,7 @@ export default function UserProfile() {
         className="text-4xl font-bold text-gray-700"
         style={{ fontfamily: "Jaro" }}
       >
-        Saad Hasan
+        {auth?.user?.full_name}
       </h2>
     </div>
   );

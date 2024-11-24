@@ -1,26 +1,35 @@
 import { Route, Routes } from "react-router-dom";
-import AdminDashBoard from "./admin/AdminDashBoard";
-import AdminQuizSetEntry from "./admin/AdminQuizSetEntry";
+import AdminDashBoard from "./admin/adminDashboard/AdminDashBoard";
+import AddQuiz from "./admin/adminQuizEntry/AddQuiz";
 import AdminQuizSetPage from "./admin/AdminQuizSetPage";
 import Index from "./pages/Index";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import LeaderboardPage from "./quize/LeaderboardPage";
-import QuizRsult from "./quize/QuizRsult";
-import QuizPage from "./quize/quizPage";
+import QuizPage from "./quize/quizBoard/QuizPage";
+import QuizRsult from "./quize/quizResult/QuizRsult";
+import AdminRoute from "./route/AdminRoute";
+import UserRoute from "./route/UserRoute";
 export default function App() {
   return (
     <>
       <Routes>
-        <Route element={<Index />} path="/" exact />
+        <Route element={<UserRoute />}>
+          <Route element={<QuizPage />} path="/quiz/:quizId" />
+          <Route element={<LeaderboardPage />} path="/leaderboard" />
+          <Route element={<QuizRsult />} path="/quiz/:quizId/result/:userId" />
+        </Route>
+
+        <Route element={<Index />} path="/" />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<RegistrationPage />} path="/register" />
-        <Route element={<AdminDashBoard />} path="/dashboard" />
-        <Route element={<AdminQuizSetPage />} path="/quizPage" />
-        <Route element={<AdminQuizSetEntry />} path="/quizEntry" />
-        <Route element={<QuizRsult />} path="/result" />
-        <Route element={<QuizPage />} path="/quiz" />
-        <Route element={<LeaderboardPage />} path="/leaderboard" />
+
+        <Route path="/admin" element={<AdminRoute />}>
+          <Route element={<AdminDashBoard />} path="dashboard" />
+          <Route element={<AdminQuizSetPage />} path="quizPage" />
+          <Route element={<AdminQuizSetPage />} path=":quizSetId/edit" />
+          <Route element={<AddQuiz />} path="quizPage/:quizSetId/entry" />
+        </Route>
       </Routes>
     </>
   );

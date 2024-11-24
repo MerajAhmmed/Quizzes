@@ -17,19 +17,17 @@ export default function LoginForm() {
   const submitForm = async (formData) => {
     try {
       const { isAdmin, ...credentials } = formData;
-      console.log("Role", isAdmin ? "admin" : "genarel User");
 
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/login`,
         credentials
       );
-      console.log(response);
 
       if (response.status === 200) {
         const { user, tokens } = response.data.data;
         setUser({ user, tokens });
       }
-      navigate(isAdmin ? "/dashboard" : "/");
+      navigate(isAdmin ? "/admin/dashboard" : "/");
     } catch (error) {
       setError("root.random", {
         type: "random", // Corrected typo

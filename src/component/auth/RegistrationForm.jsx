@@ -1,44 +1,104 @@
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAxios } from "../../hooks/useAxios";
+import Field from "../common/Field";
+
 export default function RegistrationForm() {
+  const { api } = useAxios();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm();
+
+  const submitForm = async (formData) => {
+    const payload = {
+      ...formData,
+      role: formData.isAdmin ? "admin" : "user", // Assign role dynamically
+    };
+
+    try {
+      const response = await api.post(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/register`,
+        payload
+      );
+
+      if (response.status === 201) {
+        navigate("/login");
+      } else {
+        console.error("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error("Registration Error:", error);
+      setError("root.random", {
+        type: "random",
+        message: "Something went wrong. Please try again.",
+      });
+    }
+  };
+
   return (
-    <form className="">
+    <form className="" onSubmit={handleSubmit(submitForm)}>
       <div className="">
-        <div className="mb-4">
-          <label htmlFor="name" className="block mb-2">
-            Full Name
-          </label>
+        <Field label="Full Name" error={errors.full_name} className="mb-4">
           <input
+            {...register("full_name", {
+              required: "Enter your Name",
+            })}
             type="text"
             id="name"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.email ? "border-red-600" : "border-gray-300"
+            }`}
             placeholder="John Doe"
           />
-        </div>
+        </Field>
 
-        <div className="mb-4">
-          <label htmlFor="email" className="block mb-2">
-            Email
-          </label>
+        <Field
+          label="Enter your username or email address"
+          error={errors.email}
+          className="mb-4"
+        >
+          {/* <label htmlFor="username" className="block mb-2"></label> */}
           <input
-            type="email"
+            {...register("email", {
+              required: "Enter your username or email address",
+            })}
+            type="text"
             id="email"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300"
-            placeholder="Email address"
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.email ? "border-red-600" : "border-gray-300"
+            }`}
+            placeholder="Username or email address"
           />
-        </div>
+        </Field>
       </div>
 
       <div className="flex  gap-4">
-        <div className="mb-6">
-          <label htmlFor="password" className="block mb-2">
-            Enter your Password
-          </label>
+        <Field
+          label="Enter your Password"
+          className="mb-6"
+          error={errors.password}
+        >
+          {/* <label htmlFor="password" className="block mb-2"></label> */}
           <input
+            {...register("password", {
+              required: "Enter your password",
+              minLength: {
+                value: 8,
+                message: "Your password must be at least 8 charecter",
+              },
+            })}
             type="password"
             id="password"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.password ? "border-red-600" : "border-gray-300"
+            }`}
             placeholder="Password"
           />
-        </div>
+        </Field>
 
         <div className="mb-6">
           <label htmlFor="password" className="block mb-2">
@@ -46,7 +106,7 @@ export default function RegistrationForm() {
           </label>
           <input
             type="password"
-            id="password"
+            id="Confirmpassword"
             className="w-full px-4 py-3 rounded-lg border border-gray-300"
             placeholder="Confirm Password"
           />
@@ -55,6 +115,7 @@ export default function RegistrationForm() {
 
       <div className="mb-6 flex gap-2 items-center">
         <input
+          {...register("isAdmin")}
           type="checkbox"
           id="admin"
           className="px-4 py-3 rounded-lg border border-gray-300"
@@ -63,7 +124,7 @@ export default function RegistrationForm() {
           Register as Admin
         </label>
       </div>
-
+      {/* <p>{errors?.root?.random?.message}</p> */}
       <button
         type="submit"
         className="w-full bg-primary text-white py-3 rounded-lg mb-2"
