@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AdminDashBoard from "./admin/adminDashboard/AdminDashBoard";
 import AddQuiz from "./admin/adminQuizEntry/AddQuiz";
 import AdminQuizSetPage from "./admin/AdminQuizSetPage";
@@ -15,9 +17,12 @@ export default function App() {
     <>
       <Routes>
         <Route element={<UserRoute />}>
-          <Route element={<QuizPage />} path="/quiz/:quizId" />
-          <Route element={<LeaderboardPage />} path="/leaderboard" />
-          <Route element={<QuizRsult />} path="/quiz/:quizId/result/:userId" />
+          <Route element={<QuizPage />} path="/quiz/:quizSetId" />
+          <Route element={<LeaderboardPage />} path="/leaderboard/:quizSetId" />
+          <Route
+            element={<QuizRsult />}
+            path="/quiz/:quizSetId/result/:userId"
+          />
         </Route>
 
         <Route element={<Index />} path="/" />
@@ -31,6 +36,7 @@ export default function App() {
           <Route element={<AddQuiz />} path="quizPage/:quizSetId/entry" />
         </Route>
       </Routes>
+      <ToastContainer />
     </>
   );
 }

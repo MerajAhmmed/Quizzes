@@ -1,8 +1,9 @@
 export default function QuizScoreBoard({ quizData, selectedQuiz }) {
-  console.log(quizData);
+ 
   const totalQuestions = quizData?.questions?.length;
   const totalParticipation = quizData?.stats?.total_attempts;
   const totoalRemaining = totalQuestions - selectedQuiz;
+
 
   return (
     <>

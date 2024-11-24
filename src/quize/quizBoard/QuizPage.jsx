@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Header from "../../component/common/Header";
+import useAuth from "../../hooks/useAuth";
 import { useAxios } from "../../hooks/useAxios";
 import Quiz from "../Quiz";
 import QuizScoreBoard from "./QuizScoreBoard";
 import QuizScoreBoardProfile from "./QuizScoreBoardProfile";
 
 export default function QuizPage() {
-  const { quizId, userId } = useParams();
-
+  const { quizSetId, userId } = useParams();
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const { api } = useAxios();
   const [quizData, setQuizData] = useState([]);
@@ -25,7 +27,7 @@ export default function QuizPage() {
       try {
         setLoading(true);
         const response = await api.get(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/api/quizzes/${quizId}`
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/quizzes/${quizSetId}`
         );
 
         if (response.status === 200) {
@@ -46,7 +48,7 @@ export default function QuizPage() {
     return () => {
       ignore = true;
     };
-  }, [api, quizId]);
+  }, [api, quizSetId]);
 
   function handleNextQuiz() {
     setSelectedQuiz((prev) => prev + 1);
@@ -89,26 +91,27 @@ export default function QuizPage() {
   const submittedAnswer = () => {
     const fromatedAnswer = {};
     answers.forEach((answer) => (fromatedAnswer[answer.id] = answer.answer));
-    console.log(fromatedAnswer);
+
     return fromatedAnswer;
   };
 
   const handleSubmit = async () => {
     try {
       const res = await api.post(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/quizzes/${quizId}/attempt`,
+        `${
+          import.meta.env.VITE_SERVER_BASE_URL
+        }/api/quizzes/${quizSetId}/attempt`,
         {
           answers: submittedAnswer(),
         }
       );
-      console.log(res);
-
-      navigate(`/quiz/${quizId}/result/${userId}`);
+      toast.success("submit successfully");
+      navigate(`/quiz/${quizSetId}/result/${auth?.user?.id}`);
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
     }
   };
-  console.log(quizData);
+
   return (
     <div className="bg-[#F5F3FF] min-h-screen">
       <div className="container mx-auto py-3">

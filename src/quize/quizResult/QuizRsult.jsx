@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import logoWhite from "../../assets/logo-white.svg";
+import UserChart from "../../component/common/UserChart";
 import useAuth from "../../hooks/useAuth";
 import { useAxios } from "../../hooks/useAxios";
 import QuizResultCorrectAnsShow from "./QuizResultCorrectAnsShow";
 
 export default function QuizRsult() {
+  const { quizSetId } = useParams();
   const { api } = useAxios();
   const { auth } = useAuth();
   const [quizResult, setQuizResult] = useState();
@@ -18,7 +20,7 @@ export default function QuizRsult() {
         const response = await api.get(
           `${
             import.meta.env.VITE_SERVER_BASE_URL
-          }/api/quizzes/287e6049-9e59-49ea-bb41-9a0387dce648/attempts`
+          }/api/quizzes/${quizSetId}/attempts`
         );
 
         if (response.status === 200) {
@@ -35,13 +37,14 @@ export default function QuizRsult() {
     return () => {
       ignore = true;
     };
-  }, [api]);
+  }, [api, quizSetId]);
 
   const userResults = quizResult?.attempts?.find(
     (result) => result.user.id === auth.user.id
   );
 
   const correctAnswers = userResults?.correct_answers;
+  const submittedAnswers = userResults?.submitted_answers;
 
   const submissionCount = userResults?.submitted_answers?.reduce(
     (acc, submission) => {
@@ -54,7 +57,7 @@ export default function QuizRsult() {
     },
     0
   );
-  console.log(quizResult?.quiz?.description);
+
   return (
     <div>
       <div className="flex min-h-screen overflow-hidden">
@@ -89,14 +92,14 @@ export default function QuizRsult() {
 
                     <div>
                       <p className="font-semibold text-2xl my-0">
-                        {correctAnswers?.length - submissionCount}
+                        {correctAnswers?.length - submissionCount || 0}
                       </p>
                       <p className="text-gray-300">Wrong</p>
                     </div>
                   </div>
 
                   <Link
-                    to="/leaderboard"
+                    to={`/leaderboard/${quizSetId}`}
                     className=" bg-secondary py-3 rounded-md hover:bg-secondary/90 transition-colors text-lg font-medium underline text-white"
                   >
                     View Leaderboard
@@ -110,10 +113,10 @@ export default function QuizRsult() {
                     </p>
                     <p>Your Mark</p>
                   </div>
-                  <div>
-                    <img
-                      src="./assets/icons/circular-progressbar.svg"
-                      className="h-20"
+                  <div className="h-24 w-24">
+                    <UserChart
+                      correctSubmission={submissionCount}
+                      correctAnswer={correctAnswers?.length}
                     />
                   </div>
                 </div>
@@ -122,7 +125,11 @@ export default function QuizRsult() {
           </div>
         </div>
 
-        <QuizResultCorrectAnsShow />
+        <QuizResultCorrectAnsShow
+          questions={quizResult?.quiz}
+          correctAnswers={correctAnswers}
+          submittedAnswers={submittedAnswers}
+        />
       </div>
     </div>
   );

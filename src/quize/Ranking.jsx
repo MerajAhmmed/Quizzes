@@ -1,7 +1,7 @@
 import avater from "../assets/avater.webp";
 import { getOrdinalNumber } from "../utils/positionUtils";
 
-export default function Ranking({ leaderboardData }) {
+export default function Ranking({ leaderboardData, userId }) {
   const rankingData = leaderboardData?.attempts
     ?.map((attemptRecord) => {
       const correctAnswersList = attemptRecord?.correct_answers;
@@ -50,26 +50,35 @@ export default function Ranking({ leaderboardData }) {
       <h1 className="text-2xl font-bold">Leaderboard</h1>
       <p className="mb-6">{leaderboardData?.quiz?.title}</p>
       <ul className="space-y-4">
-        {rankedData?.map(({ user, totalScore, rank }) => (
-          <li className="flex items-center justify-between" key={user?.id}>
-            <div className="flex items-center">
-              <img
-                src={avater}
-                alt="SPD Smith"
-                className="object-cover w-10 h-10 rounded-full mr-4"
-              />
-              <div>
-                <h3 className="font-semibold">{user?.full_name}</h3>
-                <p className="text-sm text-gray-500">
-                  {getOrdinalNumber(rank)}
-                </p>
+        {rankedData?.map(({ user, totalScore, rank }) => {
+          const isCurrentUser = user?.id === userId;
+
+          return (
+            <li
+              className={`flex items-center justify-between ${
+                isCurrentUser ? "bg-red-400 rounded-full" : ""
+              }`}
+              key={user?.id}
+            >
+              <div className="flex items-center">
+                <img
+                  src={avater}
+                  alt={user?.full_name}
+                  className="object-cover w-10 h-10 rounded-full mr-4"
+                />
+                <div>
+                  <h3 className="font-semibold">{user?.full_name}</h3>
+                  <p className="text-sm text-gray-500">
+                    {getOrdinalNumber(rank)}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center">
-              <span className="mr-2">{totalScore}</span>
-            </div>
-          </li>
-        ))}
+              <div className="flex items-center">
+                <span className="mr-2">{totalScore}</span>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import avater from "../assets/avater.webp";
 import Header from "../component/common/Header";
 import useAuth from "../hooks/useAuth";
@@ -9,6 +10,7 @@ export default function LeaderboardPage() {
   const [leaderboardData, setLeaderboardData] = useState(null);
   const { api } = useAxios();
   const { auth } = useAuth();
+  const { quizSetId } = useParams();
   useEffect(() => {
     let ignore = false;
     const fetchResult = async () => {
@@ -16,13 +18,12 @@ export default function LeaderboardPage() {
         const response = await api.get(
           `${
             import.meta.env.VITE_SERVER_BASE_URL
-          }/api/quizzes/287e6049-9e59-49ea-bb41-9a0387dce648/attempts`
+          }/api/quizzes/${quizSetId}/attempts`
         );
 
         if (response.status === 200) {
           if (!ignore) {
             setLeaderboardData(response.data.data);
-            console.log(response.data.data.stats.total_attempts);
           }
         }
       } catch (err) {
@@ -33,7 +34,7 @@ export default function LeaderboardPage() {
     return () => {
       ignore = true;
     };
-  }, [api]);
+  }, [api, quizSetId]);
 
   const userAttempt = leaderboardData?.attempts?.find(
     (attempt) => attempt.user.id === auth.user.id
@@ -66,6 +67,17 @@ export default function LeaderboardPage() {
     },
     0
   );
+  const sortedLeaderboard = leaderboardData?.attempts?.sort((a, b) => {
+    if (b.total_marks === a.total_marks) {
+      return b.correct_answers.length - a.correct_answers.length;
+    }
+    return b.total_marks - a.total_marks;
+  });
+
+  const userPosition =
+    sortedLeaderboard?.findIndex(
+      (attempt) => attempt.user.id === auth.user.id
+    ) + 1;
 
   return (
     <div className="bg-[#F5F3FF]  p-4">
@@ -81,7 +93,12 @@ export default function LeaderboardPage() {
                   className="w-20 h-20 rounded-full border-4 border-white mb-4 object-cover"
                 />
                 <h2 className="text-2xl font-bold">{auth?.user?.full_name}</h2>
-                <p className="text-xl">20 Position</p>
+                <p className="text-xl">
+                  {" "}
+                  {userPosition
+                    ? `${userPosition} Position `
+                    : "Not Ranked Yet"}
+                </p>
               </div>
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="text-center">
@@ -104,7 +121,10 @@ export default function LeaderboardPage() {
               </div>
             </div>
 
-            <Ranking leaderboardData={leaderboardData} />
+            <Ranking
+              leaderboardData={leaderboardData}
+              userId={auth?.user?.id}
+            />
           </div>
         </div>
       </main>
