@@ -105,14 +105,14 @@ export default function RegistrationForm() {
           </div>
         </Field>
 
-        <Field>
+        <Field error={errors.Confirmpassword}>
           <div className="mb-6">
             <label htmlFor="password" className="block mb-2">
               Confirm Password
             </label>
             <input
               {...register("Confirmpassword", {
-                required: "Enter your password",
+                required: "Retype your password",
                 minLength: {
                   value: 8,
                   message: "Your password must be at least 8 charecter",

@@ -30,8 +30,8 @@ export const useAxios = () => {
             `${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/refresh-token`,
             { refreshToken }
           );
-          const tokens = response.data.data;
 
+          const tokens = response?.data?.data;
           setAuth({ ...auth, tokens: { ...tokens } });
           originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
           return axios(originalRequest);
