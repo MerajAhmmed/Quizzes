@@ -45,7 +45,7 @@ export default function Ranking({ leaderboardData, userId }) {
     };
   });
   const topRankedData = rankedData?.slice(0, 5);
-  console.log(rankedData);
+
   return (
     <div>
       <h1 className="text-2xl font-bold">Leaderboard</h1>

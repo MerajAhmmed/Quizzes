@@ -25,6 +25,7 @@ export default function LoginForm() {
 
       if (response.status === 200) {
         const { user, tokens } = response.data.data;
+
         setUser({ user, tokens });
       }
       navigate(isAdmin ? "/admin/dashboard" : "/");

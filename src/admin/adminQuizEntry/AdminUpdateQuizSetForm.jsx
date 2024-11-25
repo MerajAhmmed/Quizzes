@@ -10,11 +10,12 @@ export default function AdminUpdateQuizSetForm() {
   const navigate = useNavigate();
   const { api } = useAxios();
   const { quizSetId } = useParams();
-  const { quizData } = useQuiz(quizSetId);
+  const { quizData, setQuizData } = useQuiz(quizSetId);
   const [loading, setLoading] = useState(false);
   const [UnpublishLoading, setUnpublishLoading] = useState(false);
   const {
     register,
+    handleSubmit,
     setError,
     formState: { errors },
     reset,
@@ -59,6 +60,7 @@ export default function AdminUpdateQuizSetForm() {
     }
     setLoading(false);
   };
+
   const unpublishQuiz = async () => {
     setUnpublishLoading(true);
     try {
@@ -75,8 +77,37 @@ export default function AdminUpdateQuizSetForm() {
     setUnpublishLoading(false);
   };
 
+  const submitForm = async (quizData) => {
+    const Data = {
+      title: quizData.title,
+      description: quizData.description,
+    };
+    try {
+      const response = await api.patch(
+        `${
+          import.meta.env.VITE_SERVER_BASE_URL
+        }/api/admin/quizzes/${quizSetId}`,
+        Data
+      );
+      if (response.status === 200) {
+        setQuizData({ ...quizData, ...Data });
+        return true;
+      }
+    } catch (err) {
+      setError("submit", { message: "Failed to update quiz." });
+    }
+    return false;
+  };
+
+  const handleNextClick = async () => {
+    const isUpdated = await handleSubmit(submitForm)(); // Trigger form submission
+    if (isUpdated) {
+      navigate(`/admin/quizPage/${quizSetId}/entry`);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(submitForm)}>
       <div className="mb-4">
         <label
           htmlFor="quiz-title"
@@ -146,6 +177,7 @@ export default function AdminUpdateQuizSetForm() {
           to={`/admin/quizPage/${quizSetId}/entry`}
           type="submit"
           className="w-full block text-center bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          onClick={handleNextClick}
         >
           Next
         </Link>
