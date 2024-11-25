@@ -46,22 +46,30 @@ export default function QuizRsult() {
   const correctAnswers = userResults?.correct_answers;
   const submittedAnswers = userResults?.submitted_answers;
 
-  const submissionCount = userResults?.submitted_answers?.reduce(
-    (acc, submission) => {
-      const match = correctAnswers?.some(
-        (correct) =>
-          correct.question_id === submission.question_id &&
-          correct.answer === submission.answer
-      );
-      return match ? acc + 1 : acc;
-    },
-    0
-  );
+  const marksObtained = submittedAnswers?.reduce((acc, submission) => {
+    const matchedAnswer = correctAnswers?.find(
+      (correct) =>
+        correct.question_id === submission.question_id &&
+        correct.answer === submission.answer
+    );
+    return matchedAnswer ? acc + matchedAnswer.marks : acc;
+  }, 0);
+
+  const submissionCount = submittedAnswers?.reduce((acc, submission) => {
+    const match = correctAnswers?.some(
+      (correct) =>
+        correct.question_id === submission.question_id &&
+        correct.answer === submission.answer
+    );
+    return match ? acc + 1 : acc;
+  }, 0);
 
   return (
     <div>
       <div className="flex min-h-screen overflow-hidden">
-        <img src={logoWhite} className="max-h-11 fixed left-6 top-6 z-50" />
+        <Link to="/">
+          <img src={logoWhite} className="max-h-11 fixed left-6 top-6 z-50" />
+        </Link>
 
         <div className="max-h-screen overflow-hidden hidden lg:flex lg:w-1/2 bg-primary flex-col justify-center p-12 relative">
           <div>
@@ -109,7 +117,7 @@ export default function QuizRsult() {
                 <div className="w-1/2 bg-primary/80 rounded-md border border-white/20 flex items-center p-4">
                   <div className="flex-1">
                     <p className="text-2xl font-bold">
-                      {submissionCount}/ {correctAnswers?.length}
+                      {marksObtained} / {quizResult?.quiz?.total_marks}
                     </p>
                     <p>Your Mark</p>
                   </div>

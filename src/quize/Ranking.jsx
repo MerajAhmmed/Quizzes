@@ -44,13 +44,14 @@ export default function Ranking({ leaderboardData, userId }) {
       rank: currentRank,
     };
   });
-
+  const topRankedData = rankedData?.slice(0, 5);
+  console.log(rankedData);
   return (
     <div>
       <h1 className="text-2xl font-bold">Leaderboard</h1>
       <p className="mb-6">{leaderboardData?.quiz?.title}</p>
       <ul className="space-y-4">
-        {rankedData?.map(({ user, totalScore, rank }) => {
+        {topRankedData?.map(({ user, totalScore, rank }) => {
           const isCurrentUser = user?.id === userId;
 
           return (

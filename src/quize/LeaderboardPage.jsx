@@ -4,9 +4,10 @@ import avater from "../assets/avater.webp";
 import Header from "../component/common/Header";
 import useAuth from "../hooks/useAuth";
 import { useAxios } from "../hooks/useAxios";
+import { getOrdinalNumber } from "../utils/positionUtils";
 import Ranking from "./Ranking";
 
-export default function LeaderboardPage() {
+export default function LeaderboardPage({ children }) {
   const [leaderboardData, setLeaderboardData] = useState(null);
   const { api } = useAxios();
   const { auth } = useAuth();
@@ -76,7 +77,7 @@ export default function LeaderboardPage() {
 
   const userPosition =
     sortedLeaderboard?.findIndex(
-      (attempt) => attempt.user.id === auth.user.id
+      (attempt) => attempt?.user?.id === auth?.user?.id
     ) + 1;
 
   return (
@@ -94,10 +95,7 @@ export default function LeaderboardPage() {
                 />
                 <h2 className="text-2xl font-bold">{auth?.user?.full_name}</h2>
                 <p className="text-xl">
-                  {" "}
-                  {userPosition
-                    ? `${userPosition} Position `
-                    : "Not Ranked Yet"}
+                  {getOrdinalNumber(userPosition)} Position
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-4 mb-6">

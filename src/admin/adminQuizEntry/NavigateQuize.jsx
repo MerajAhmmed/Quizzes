@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function NavigateQuize() {
+  const { quizSetId } = useParams();
   return (
     <nav className="text-sm mb-4" aria-label="Breadcrumb">
       <ol className="list-none p-0 inline-flex">
@@ -21,7 +22,7 @@ export default function NavigateQuize() {
         </li>
         <li>
           <Link
-            to="/admin/quizPage"
+            to={`/admin/${quizSetId}/edit`}
             className="text-gray-600 hover:text-buzzr-purple"
             aria-current="page"
           >

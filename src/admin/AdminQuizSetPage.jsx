@@ -10,7 +10,7 @@ export default function AdminQuizSetPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <Link
-              to="/dashboard"
+              to="/admin/dashboard"
               className="inline-flex items-center text-sm text-gray-600 mb-6 hover:text-buzzr-purple"
             >
               <svg

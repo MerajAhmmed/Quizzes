@@ -12,6 +12,7 @@ export default function AdminUpdateQuizSetForm() {
   const { quizSetId } = useParams();
   const { quizData } = useQuiz(quizSetId);
   const [loading, setLoading] = useState(false);
+  const [UnpublishLoading, setUnpublishLoading] = useState(false);
   const {
     register,
     setError,
@@ -58,6 +59,21 @@ export default function AdminUpdateQuizSetForm() {
     }
     setLoading(false);
   };
+  const unpublishQuiz = async () => {
+    setUnpublishLoading(true);
+    try {
+      const response = await api.patch(
+        `${
+          import.meta.env.VITE_SERVER_BASE_URL
+        }/api/admin/quizzes/${quizSetId}`,
+        { status: "draft" }
+      );
+      toast.success("Quiz Unpublished Successfully");
+    } catch (error) {
+      setError("submit", { message: "Failed to unpublish quiz." });
+    }
+    setUnpublishLoading(false);
+  };
 
   return (
     <form>
@@ -98,7 +114,7 @@ export default function AdminUpdateQuizSetForm() {
         <p className="text-red-500 text-sm">{errors["quiz-title"].message}</p>
       )}
 
-      <div className="mx-2 my-6">
+      <div className="mx-2 my-6 flex gap-2">
         <button
           type="button"
           className="w-full block text-center bg-primary text-white py-2 px-4 rounded-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
@@ -107,7 +123,17 @@ export default function AdminUpdateQuizSetForm() {
           {loading && <FaSpinner className="animate-spin" />}
           Make Quiz Public
         </button>
+
+        <button
+          type="button"
+          className="w-full block text-center bg-primary text-white py-2 px-4 rounded-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          onClick={unpublishQuiz}
+        >
+          {UnpublishLoading && <FaSpinner className="animate-spin" />}
+          Unpublish Quiz
+        </button>
       </div>
+
       <div className="flex gap-2">
         <button
           type="button"
