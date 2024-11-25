@@ -42,7 +42,7 @@ export default function RegistrationForm() {
   return (
     <form className="" onSubmit={handleSubmit(submitForm)}>
       <div className="">
-        <Field>
+        <Field error={errors?.full_name}>
           <div className="mb-4">
             <label htmlFor="name" className="block mb-2">
               Full Name
@@ -61,7 +61,7 @@ export default function RegistrationForm() {
           </div>
         </Field>
 
-        <Field>
+        <Field error={errors?.email}>
           <div className="mb-4">
             <label htmlFor="email" className="block mb-2">
               Email
@@ -82,7 +82,7 @@ export default function RegistrationForm() {
       </div>
 
       <div className="flex  gap-4">
-        <Field>
+        <Field error={errors?.password}>
           <div className="mb-6">
             <label htmlFor="password" className="block mb-2">
               Enter your Password
@@ -104,6 +104,7 @@ export default function RegistrationForm() {
             />
           </div>
         </Field>
+
         <Field>
           <div className="mb-6">
             <label htmlFor="password" className="block mb-2">

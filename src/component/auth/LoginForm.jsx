@@ -39,7 +39,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>
-      <Field>
+      <Field error={errors.email}>
         <div className="mb-4">
           <label htmlFor="username" className="block mb-2">
             Enter your username or email address
@@ -57,7 +57,7 @@ export default function LoginForm() {
           />
         </div>
       </Field>
-      <Field>
+      <Field error={errors.password}>
         <div className="mb-6">
           <label htmlFor="password" className="block mb-2">
             Enter your Password

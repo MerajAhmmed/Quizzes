@@ -100,7 +100,7 @@ export default function AdminUpdateQuizSetForm() {
   };
 
   const handleNextClick = async () => {
-    const isUpdated = await handleSubmit(submitForm)(); // Trigger form submission
+    const isUpdated = await handleSubmit(submitForm)(); 
     if (isUpdated) {
       navigate(`/admin/quizPage/${quizSetId}/entry`);
     }

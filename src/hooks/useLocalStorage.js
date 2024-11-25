@@ -15,5 +15,5 @@ export default function useLocalStorage() {
     setAuth(null);
     localStorage.clear("user");
   }
-  return { auth, setUser, clearUser };
+  return { auth, setUser, clearUser, setAuth };
 }

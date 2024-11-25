@@ -25,14 +25,15 @@ export const useAxios = () => {
           originalRequest._retry = true;
 
           const refreshToken = auth?.tokens?.refreshToken;
+
           const response = await axios.post(
-            `${import.meta.VITE_SERVER_BASE_URL}/api/auth/refresh-token`,
+            `${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/refresh-token`,
             { refreshToken }
           );
-          const { token } = response.data;
+          const tokens = response.data.data;
 
-          setAuth({ ...auth, tokens: token });
-          originalRequest.headers.Authorization = `Bearer ${token}`;
+          setAuth({ ...auth, tokens: { ...tokens } });
+          originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
           return axios(originalRequest);
         }
         return Promise.reject(error);
